@@ -3,14 +3,36 @@ const jediFile = 'jedi_list.json';
 
 async function replaceJedi(jediId, jedi) {
     //TODO write logic replacing jedi by it's id with newly passed jedi
+    const findId = Number.parseInt(jediId); //parse to number
+    
+    const data = await readJediFile();
+    const index = data.findIndex(find => find.id === findId);
+
+    if (index === -1){
+        console.log("not found index");
+    }
+    data[index] = jedi;
+    await writeJediFile(data);
+    
 }
 
 async function deleteJedi(id) {
     //TODO Delete jedi by given id in our file
+    const findId = Number.parseInt(id); //parse to number
+    
+    const data = await readJediFile();
+    const index = data.findIndex(find => find.id === findId);
+
+    if (index === -1){
+        console.log("not found index");
+    }
+    data.splice(index, 1)
+    await writeJediFile(data)
 }
 
 async function getAll() {
-    //TODO obtain all saved jedis and return it to callee
+    const data = await readJediFile();
+    return data
 }
 
 async function addJedi(jedi) {
@@ -30,7 +52,7 @@ async function getJedi(id) {
 async function readJediFile() {
     try {
         const data = await fs.readFile(jediFile);
-        console.log(data.toString());
+        //console.log(data.toString());
         return JSON.parse(data.toString());
     } catch (error) {
         console.error(`Got an error trying to read the file: ${error.message}`);
@@ -52,3 +74,4 @@ module.exports = {
     replaceJedi,
     deleteJedi,
 };
+

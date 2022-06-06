@@ -34,11 +34,39 @@ app.get("/jedi/:id", async (req, res) => {
 });
 
 //TODO 1. create GET /jedi route and handle logic inside of it
+app.get('/jedi', async(req, res) => {
+    const allJedis =  await jediService.getAll()
+    if (!allJedis) return res.status(404).json({
+        status: 404,
+        error: "Not found"
+    });
+
+    res.status(200).json(allJedis)
+})
 
 //TODO 2. create PUT /jedi/:id route and handle logic of updating jedi that already exists in the list.
 //Dont forget to take care of errors (e.g. jedi with id not exists)
+app.put('/jedi/:id', async(req, res)=> {
+    if (isNaN(req.params.id)) return res.status(404).json({
+        status: 404,
+        error: "Not found string"
+    })
+
+    const jedi = await jediService.replaceJedi(req.params.id, req.body)
+    res.status(200).json(jedi)
+})
 
 //TODO 3. create DELETE /jedi/:id route and handle logic of deleting jedi
+app.delete('/jedi/:id', async(req, res)=> {
+    if (isNaN(req.params.id)) return res.status(404).json({
+        status: 404,
+        error: "Not found string"
+    })
+
+    const jedi = await jediService.deleteJedi(req.params.id)
+    res.status(200).json(jedi)
+})
+
 
 app.listen(port, () => {
     console.log("Server started on port", port);
